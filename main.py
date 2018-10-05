@@ -24,44 +24,21 @@ class Polynomial:
         y_axis_low = int(axis.y_axis_range[0])
         y_axis_high = int(axis.y_axis_range[1])
 
-        if self.polynomial_degree() == 2:
-            # QUADRATIC GRAPH
-            polynomial_numbers = [0, 0, 0]
-            polynomial_numbers[0] = int(input("Enter value for []x^2 >>> "))
-            polynomial_numbers[1] = int(input("Enter value for []x >>> "))
-            polynomial_numbers[2] = int(input("Enter final value >>> "))
-            while x_axis_low < x_axis_high:
-                if y_axis_low <= (polynomial_numbers[0]*(x_axis_low**2)) + (polynomial_numbers[1] * x_axis_low) + polynomial_numbers[2] <= y_axis_high:
-                    # substitutes numbers into quadratic graph to receive points in valid axis range
-                    self.list_of_points.append([x_axis_low, (polynomial_numbers[0]*(x_axis_low**2)) + (polynomial_numbers[1] * x_axis_low) + polynomial_numbers[2]])
-                x_axis_low += 1  # incrementation of x values for each point
-
+        polynomial_numbers = [0, 0, 0, 0, 0]
+        if self.polynomial_degree() == 4:
+            polynomial_numbers[4] = int(input("Enter value for []x^4 >>> "))
         elif self.polynomial_degree() == 3:
-            # CUBIC GRAPH
-            polynomial_numbers = [0, 0, 0, 0]
-            polynomial_numbers[0] = int(input("Enter value for []x^3 >>> "))
-            polynomial_numbers[1] = int(input("Enter value for []x^2 >>> "))
-            polynomial_numbers[2] = int(input("Enter value for []x >>> "))
-            polynomial_numbers[3] = int(input("Enter final value >>> "))
-            while x_axis_low < x_axis_high:
-                if y_axis_low <= ((polynomial_numbers[0]*(x_axis_low**3)) + polynomial_numbers[1]*(x_axis_low**2)) + (polynomial_numbers[2] * x_axis_low) + polynomial_numbers[3] <= y_axis_high:
-                    # substitutes numbers into cubic graph to receive points in valid axis range
-                    self.list_of_points.append([x_axis_low, (polynomial_numbers[0]*(x_axis_low**3)) + (polynomial_numbers[0]*(x_axis_low**2)) + (polynomial_numbers[1] * x_axis_low) + polynomial_numbers[2]])
-                x_axis_low += 1  # incrementation of x values for each point
-
-        elif self.polynomial_degree() == 4:
-            # QUARTIC GRAPH
-            polynomial_numbers = [0, 0, 0, 0, 0]
-            polynomial_numbers[0] = int(input("Enter value for []x^4 >>> "))
-            polynomial_numbers[1] = int(input("Enter value for []x^3 >>> "))
+            polynomial_numbers[3] = int(input("Enter value for []x^3 >>> "))
+        elif self.polynomial_degree() == 2:
             polynomial_numbers[2] = int(input("Enter value for []x^2 >>> "))
-            polynomial_numbers[3] = int(input("Enter value for []x >>> "))
-            polynomial_numbers[4] = int(input("Enter final value >>> "))
-            while x_axis_low < x_axis_high:
-                if y_axis_low <= (polynomial_numbers[0] * (x_axis_low**4)) + (polynomial_numbers[1]*(x_axis_low**3)) + (polynomial_numbers[2]*(x_axis_low**2)) + (polynomial_numbers[3] * x_axis_low) + polynomial_numbers[4] <= y_axis_high:
-                    # substitutes numbers into quartic graph to receive points in valid axis range
-                    self.list_of_points.append([x_axis_low, (polynomial_numbers[0] * (x_axis_low**4)) + (polynomial_numbers[1]*(x_axis_low**3)) + (polynomial_numbers[2]*(x_axis_low**2)) + (polynomial_numbers[3] * x_axis_low) + polynomial_numbers[4]])
-                x_axis_low += 1  # incrementation of x values for each point
+        else:
+            polynomial_numbers[1] = int(input("Enter value for []x >>> "))
+        polynomial_numbers[0] = int(input("Enter final value >>> "))
+        while x_axis_low < x_axis_high:
+            if y_axis_low <= (polynomial_numbers[0] * (x_axis_low**4)) + (polynomial_numbers[1]*(x_axis_low**3)) + (polynomial_numbers[2]*(x_axis_low**2)) + (polynomial_numbers[3] * x_axis_low) + polynomial_numbers[4] <= y_axis_high:
+                # substitutes numbers into quartic graph to receive points in valid axis range
+                self.list_of_points.append([x_axis_low, (polynomial_numbers[0] * (x_axis_low**4)) + (polynomial_numbers[1]*(x_axis_low**3)) + (polynomial_numbers[2]*(x_axis_low**2)) + (polynomial_numbers[3] * x_axis_low) + polynomial_numbers[4]])
+            x_axis_low += 1  # incrementation of x values for each point
 
         print(self.list_of_points)
 
@@ -78,11 +55,6 @@ class Polynomial:
 
 graph_axis = Axis(-10, 10, -10, 10)
 Polynomial(graph_axis)
-
-
-class Linear:
-    pass
-
 
 class Trigonometric:
     pass
