@@ -11,16 +11,6 @@ y_axis = (-10, 10)
 
 graph_axis = equations.Axis(x_axis[0], x_axis[1], y_axis[0], y_axis[1])
 
-def pairwise(lst):
-    """ yield item i and item i+1 in lst. e.g.
-        (lst[0], lst[1]), (lst[1], lst[2]), ..., (lst[-1], None)
-    """
-    if not lst: return
-    #yield None, lst[0]
-    for i in range(len(lst)-1):
-        yield lst[i], lst[i+1]
-    yield lst[-1], None
-
 height = 720
 width = 1280
 screen_size = (width, height)  # Sets screen size
