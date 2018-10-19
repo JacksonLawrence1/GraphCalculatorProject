@@ -1,6 +1,5 @@
 import math
 
-
 class Axis:
     """
     Creates numbers for the x and y axis also allowing a range for which the axis can take
@@ -8,8 +7,6 @@ class Axis:
     def __init__(self, axis_x_low, axis_x_high, axis_y_low, axis_y_high):
         self.x_axis_range = [int(axis_x_low), int(axis_x_high)]
         self.y_axis_range = [int(axis_y_low), int(axis_y_high)]
-        self.x_axis_difference = self.x_axis_range[1] - self.x_axis_range[0]
-        self.y_axis_difference = self.y_axis_range[1] - self.y_axis_range[0]
 
     def return_x_axis(self):
         return self.x_axis_range
@@ -24,9 +21,9 @@ class Polynomial:
     e.g. x^2, x^3...
     """
     def __init__(self, axis):
-        self.list_of_points = []  # Each coordinate that the graph goes through
-        x_axis = graph_axis.return_x_axis()
-        y_axis = graph_axis.return_y_axis()
+        self.points = []  # Each coordinate that the graph goes through
+        x_axis = axis.return_x_axis()
+        y_axis = axis.return_y_axis()
         # creating instance of x and y axis
 
         polynomial_degree = self.polynomial_degree()
@@ -47,10 +44,8 @@ class Polynomial:
                                 + polynomial_numbers[0]
             if y_axis[0] <= y_coordinate <= y_axis[1]:
                 # substitutes numbers into polynomial graph to receive points in valid axis range
-                self.list_of_points.append([x_axis[0], y_coordinate])
-            x_axis[0] += 1  # incrementation of x values for each point
-
-        print(self.list_of_points)
+                self.points.append([x_axis[0], y_coordinate])
+            x_axis[0] += 0.01  # incrementation of x values for each point
 
     def polynomial_degree(self):
         """
@@ -62,19 +57,21 @@ class Polynomial:
             degree = int(input("Please enter an appropriate value (1-4) >>> "))
         return degree
 
+    def return_points(self):
+        return self.points
+
 class Trigonometric:
     """
     function to create trigonometric functions
     e.g. (sin, cos tan graphs)
     """
-    def __init__(self):
+    def __init__(self, axis):
         """
         creates the list of points for trigonometric functions
         """
-        graph_axis = Axis(-(2 * math.pi), 2 * math.pi, -10, 10)
-        self.list_of_points = []
-        x_axis = graph_axis.return_x_axis()
-        y_axis = graph_axis.return_y_axis()
+        self.points = []
+        x_axis = axis.return_x_axis()
+        y_axis = axis.return_y_axis()
 
         trigonometric_function_input = self.trigonometric_function_input()
 
@@ -90,11 +87,8 @@ class Trigonometric:
                 y_coordinate = math.tan(x_axis[0])
 
             if y_axis[0] <= y_coordinate <= y_axis[1]:
-                self.list_of_points.append(["{0:1.3f}".format(x_axis[0]), "{0:1.3f}".format(y_coordinate)])
-            x_axis[0] += 1
-
-        print(self.list_of_points)
-
+                self.points.append([x_axis[0], y_coordinate])
+            x_axis[0] += 0.01
 
     def trigonometric_function_input(self):
         """
@@ -109,10 +103,8 @@ class Trigonometric:
             trigonometric_function = input("Please enter appropriate function (sin, cos or tan) >>> ").upper()
         return trigonometric_function
 
-
-graph_axis = Axis(-10, 10, -10, 10)
-Trigonometric()
-
+    def return_points(self):
+        return self.points
 
 class Circle:
     pass
