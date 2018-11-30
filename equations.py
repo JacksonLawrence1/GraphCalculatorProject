@@ -18,64 +18,47 @@ class Axis:
     def return_y_axis(self):
         return self.y_axis_range
 
+class Equation:
+    def __init__(self, axis):
+        self.x_axis = axis.return_x_axis()
+        self.y_axis = axis.return_y_axis()
+        self.list_of_points = []
 
-class Polynomial:
+    def return_points(self):
+        return self.list_of_points
+
+
+class Polynomial(Equation):
     """
     creates points for a polynomial from linear to quartics
     e.g. x^2, x^3...
     """
-    def __init__(self, axis):
+    def __init__(self, axis, polynomial_numbers):
+        super().__init__(axis)
         self.points = []  # Each coordinate that the graph goes through
-        x_axis = axis.return_x_axis()
-        y_axis = axis.return_y_axis()
-        # creating instance of x and y axis
-
-        polynomial_degree = self.polynomial_degree()
-        polynomial_numbers = [0, 0, 0, 0, 0]
-        if polynomial_degree == 4:
-            polynomial_numbers[4] = float(input("Enter value for []x^4 >>> "))
-        if polynomial_degree >= 3:
-            polynomial_numbers[3] = float(input("Enter value for []x^3 >>> "))
-        if polynomial_degree >= 2:
-            polynomial_numbers[2] = float(input("Enter value for []x^2 >>> "))
-        polynomial_numbers[1] = float(input("Enter value for []x >>> "))
-        polynomial_numbers[0] = float(input("Enter final value >>> "))
-        while x_axis[0] < x_axis[1]:
-            y_coordinate = (polynomial_numbers[4] * (x_axis[0]**4))\
-                                + (polynomial_numbers[3]*(x_axis[0]**3))\
-                                + (polynomial_numbers[2]*(x_axis[0]**2))\
-                                + (polynomial_numbers[1] * x_axis[0])\
+        while self.x_axis[0] < self.x_axis[1]:
+            y_coordinate = (polynomial_numbers[4] * (self.x_axis[0]**4))\
+                                + (polynomial_numbers[3]*(self.x_axis[0]**3))\
+                                + (polynomial_numbers[2]*(self.x_axis[0]**2))\
+                                + (polynomial_numbers[1] * self.x_axis[0])\
                                 + polynomial_numbers[0]
-            if y_axis[0] <= y_coordinate <= y_axis[1]:
+            if self.y_axis[0] <= y_coordinate <= self.y_axis[1]:
                 # substitutes numbers into polynomial graph to receive points in valid axis range
-                self.points.append([x_axis[0], y_coordinate])
-            x_axis[0] += incrementation  # incrementation of x values for each point
-
-    def polynomial_degree(self):
-        """
-        selection of which graph they want to visualize
-        e.g. if degree is 2 then graph will be set to a quadratic
-        """
-        degree = float(input("Degree of polynomial (1-4) >>> "))
-        while degree < 1 or degree > 4 :  # validation loop so user must select 1, 2, 3 or 4
-            degree = float(input("Please enter an appropriate value (1-4) >>> "))
-        return degree
+                self.points.append([self.x_axis[0], y_coordinate])
+            self.x_axis[0] += incrementation  # incrementation of x values for each point
 
     def return_points(self):
         return self.points
 
-class Circle:
-    def __init__(self, axis):
+
+class Circle(Equation):
+    def __init__(self, axis, circle_centre, circle_radius):
+        super().__init__(axis)
         """
         creates list of points for circle equation
         """
+
         self.points = []
-        x_axis = axis.return_x_axis()
-        y_axis = axis.return_y_axis()
-        circle_centre = [0, 0]
-        circle_centre[0] = float(input("Enter the x coordinate for centre of circle >>> "))
-        circle_centre[1] = float(input("Enter the y coordinate for the centre of circle >>> "))
-        circle_radius = float(input("Enter the radius of the circle >>> "))
 
         start_point = circle_centre[0] - circle_radius
         end_point = circle_centre[0] + circle_radius
@@ -85,7 +68,7 @@ class Circle:
             circle_b = -(2 * circle_centre[1])
             circle_c = (circle_centre[1] ** 2) + ((start_point_1-circle_centre[0])**2) - (circle_radius ** 2)
             y_coordinate = (-circle_b + math.sqrt((circle_b**2) - (4*circle_c)))/2
-            if y_axis[0] <= y_coordinate <= y_axis[1]:
+            if self.y_axis[0] <= y_coordinate <= self.y_axis[1]:
                 self.points.append([start_point_1, y_coordinate])
                 start_point_1 += incrementation
         while start_point_1 > start_point:
@@ -93,7 +76,7 @@ class Circle:
             circle_c = (circle_centre[1] ** 2) + ((start_point_1 - circle_centre[0])**2) - (circle_radius ** 2)
             if ((circle_b**2) - (4*circle_c)) > 0:
                 y_coordinate = (-circle_b - math.sqrt((circle_b**2) - (4*circle_c)))/2
-            if y_axis[0] <= y_coordinate <= y_axis[1]:
+            if self.y_axis[0] <= y_coordinate <= self.y_axis[1]:
                 self.points.append([start_point_1, y_coordinate])
             start_point_1 -= incrementation
         self.points.append([start_point, circle_centre[1]])
@@ -101,83 +84,64 @@ class Circle:
     def return_points(self):
         return self.points
 
-class Trigonometric:
+class Trigonometric(Equation):
     """
     function to create trigonometric functions
     e.g. (sin, cos tan graphs)
     """
-    def __init__(self, axis):
+    def __init__(self, axis, trigonometric_function_input):
+        super().__init__(axis)
         """
         creates the list of points for trigonometric functions
         """
         self.points = []
-        x_axis = axis.return_x_axis()
-        y_axis = axis.return_y_axis()
 
-        trigonometric_function_input = self.trigonometric_function_input()
-
-        while x_axis[0] < x_axis[1]:
+        while self.x_axis[0] < self.x_axis[1]:
             """
             changes what the graph will plot depending on chosen trigonometric function
             """
             if trigonometric_function_input == "SIN":
-                y_coordinate = math.sin(x_axis[0])
+                y_coordinate = math.sin(self.x_axis[0])
             elif trigonometric_function_input == "COS":
-                y_coordinate = math.cos(x_axis[0])
+                y_coordinate = math.cos(self.x_axis[0])
             elif trigonometric_function_input == "TAN":
-                y_coordinate = math.tan(x_axis[0])
+                y_coordinate = math.tan(self.x_axis[0])
 
-            if y_axis[0] <= y_coordinate <= y_axis[1]:
-                self.points.append([x_axis[0], y_coordinate])
-            x_axis[0] += incrementation
-
-    def trigonometric_function_input(self):
-        """
-        selection of which type of trigonometric function they
-        want to select (e.g. sin, cos, tan)
-        """
-        trigonometric_function = input("Enter chosen Trigonometric function >>> ").upper()
-        while trigonometric_function not in ["SIN", "COS", "TAN"]:
-            """
-            validation loop, making sure they pick a valid trigonometric function
-            """
-            trigonometric_function = input("Please enter appropriate function (sin, cos or tan) >>> ").upper()
-        return trigonometric_function
+            if self.y_axis[0] <= y_coordinate <= self.y_axis[1]:
+                self.points.append([self.x_axis[0], y_coordinate])
+            self.x_axis[0] += incrementation
 
     def return_points(self):
         return self.points
 
-class Logarithm:
-    def __init__(self, axis):
+
+class Logarithm(Equation):
+    def __init__(self, axis, log_input):
+        super().__init__(axis)
         self.points = []
-        x_axis = axis.return_x_axis()
-        y_axis = axis.return_y_axis()
 
-        log_input = self.log_inputs()
-
-        while x_axis[0] < x_axis[1]:
+        next_y_axis = True
+        while self.x_axis[0] < self.x_axis[1]:
             """
             changes what the graph will plot depending on chosen trigonometric function
             """
-            if log_input == "LOG":
-                y_coordinate = math.sin(x_axis[0])
-            elif log_input == "LN":
-                y_coordinate = math.lo(x_axis[0])
-            elif log_input == "E":
-                y_coordinate = math.tan(x_axis[0])
+            if self.x_axis[0] > 0:
+                next_y_axis = True
+                if log_input[0] == "LOG":
+                    y_coordinate = math.log(self.x_axis[0], log_input[1])
+                elif log_input[0] == "LN":
+                    y_coordinate = math.log(self.x_axis[0], 2.71828182845)  # accurate value for e
+                elif log_input[0] == "E":
+                    y_coordinate = 2.71828182845 ** self.x_axis[0]
+            elif log_input[0] == "E":
+                y_coordinate = 2.71828182845 ** self.x_axis[0]
+            else:
+                next_y_axis = False
 
-            if y_axis[0] <= y_coordinate <= y_axis[1]:
-                self.points.append([x_axis[0], y_coordinate])
-            x_axis[0] += incrementation
-
-    def log_inputs(self):
-        """
-        what type of log graph they want to plot
-        """
-        log_input = input("Log, ln or e graph? >>> ").upper()
-        while log_input not in ["LOG", "LN", "E"]:
-            log_input = input("Please enter an appropriate function (Log, ln or e) >>> ").upper()
-        return log_input
+            if next_y_axis:
+                if self.y_axis[0] <= y_coordinate <= self.y_axis[1]:
+                    self.points.append([self.x_axis[0], y_coordinate])
+            self.x_axis[0] += incrementation
 
     def return_points(self):
         return self.points
