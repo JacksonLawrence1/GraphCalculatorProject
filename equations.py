@@ -1,5 +1,6 @@
 import math
 
+
 # the amount that the x axis will be incremented by
 # smaller value the more accurate the graph will look but may take longer to draw
 incrementation = 0.01
@@ -33,7 +34,7 @@ class Polynomial(Equation):
     creates points for a polynomial from linear to quartics
     e.g. x^2, x^3...
     """
-    def __init__(self, axis, polynomial_numbers):
+    def __init__(self, axis, polynomial_numbers=(0, 0, 0, 0, 0)):
         super().__init__(axis)
         self.points = []  # Each coordinate that the graph goes through
         while self.x_axis[0] < self.x_axis[1]:
@@ -57,57 +58,65 @@ class Circle(Equation):
         """
         creates list of points for circle equation
         """
+        self.points = []  # list of coordinates to be plotted in gui
 
-        self.points = []
-
-        start_point = circle_centre[0] - circle_radius
+        start_point = circle_centre[0] - circle_radius  # finds range of x coordinates for circle
         end_point = circle_centre[0] + circle_radius
-        start_point_1 = start_point
+        start_point_1 = start_point  # placeholder for start point allows connection to start coordinate
 
         while start_point_1 < end_point:
+            """
+            rearranged equation of a circle to find y coordinate, this first while loop will 
+            create the top half/bottom half of the circle depending on the results on the quadratic
+            formula
+            """
             circle_b = -(2 * circle_centre[1])
             circle_c = (circle_centre[1] ** 2) + ((start_point_1-circle_centre[0])**2) - (circle_radius ** 2)
             y_coordinate = (-circle_b + math.sqrt((circle_b**2) - (4*circle_c)))/2
-            if self.y_axis[0] <= y_coordinate <= self.y_axis[1]:
+            if self.y_axis[0] <= y_coordinate <= self.y_axis[1] and self.x_axis[0] <= start_point_1 <= self.x_axis[1]:
+                # ensures the coordinate is in the axis range
                 self.points.append([start_point_1, y_coordinate])
-                start_point_1 += incrementation
+            start_point_1 += incrementation
         while start_point_1 > start_point:
             circle_b = -(2 * circle_centre[1])
             circle_c = (circle_centre[1] ** 2) + ((start_point_1 - circle_centre[0])**2) - (circle_radius ** 2)
             if ((circle_b**2) - (4*circle_c)) > 0:
                 y_coordinate = (-circle_b - math.sqrt((circle_b**2) - (4*circle_c)))/2
-            if self.y_axis[0] <= y_coordinate <= self.y_axis[1]:
+            if self.y_axis[0] <= y_coordinate <= self.y_axis[1] and self.x_axis[0] <= start_point_1 <= self.x_axis[1]:
                 self.points.append([start_point_1, y_coordinate])
             start_point_1 -= incrementation
-        self.points.append([start_point, circle_centre[1]])
+        if self.y_axis[0] <= start_point <= self.y_axis[1] and self.x_axis[0] <= circle_centre[1] <= self.x_axis[1]:
+            self.points.append([start_point, circle_centre[1]])  # connects last coordinate to first point
 
     def return_points(self):
         return self.points
+
 
 class Trigonometric(Equation):
     """
     function to create trigonometric functions
     e.g. (sin, cos tan graphs)
     """
-    def __init__(self, axis, trigonometric_function_input):
+    def __init__(self, axis, trigonometric_function_input, x_coefficient=1, function_coefficient=1):
         super().__init__(axis)
         """
         creates the list of points for trigonometric functions
         """
         self.points = []
 
-        while self.x_axis[0] < self.x_axis[1]:
+        while self.x_axis[0] <= self.x_axis[1]:
             """
             changes what the graph will plot depending on chosen trigonometric function
             """
             if trigonometric_function_input == "SIN":
-                y_coordinate = math.sin(self.x_axis[0])
+                y_coordinate = function_coefficient * (math.sin(x_coefficient * self.x_axis[0]))
             elif trigonometric_function_input == "COS":
-                y_coordinate = math.cos(self.x_axis[0])
+                y_coordinate = function_coefficient * (math.cos(x_coefficient * self.x_axis[0]))
             elif trigonometric_function_input == "TAN":
-                y_coordinate = math.tan(self.x_axis[0])
+                y_coordinate = function_coefficient * (math.tan(x_coefficient * self.x_axis[0]))
 
             if self.y_axis[0] <= y_coordinate <= self.y_axis[1]:
+                # starts adding coordinates to list of points within given axis range
                 self.points.append([self.x_axis[0], y_coordinate])
             self.x_axis[0] += incrementation
 
@@ -116,7 +125,7 @@ class Trigonometric(Equation):
 
 
 class Logarithm(Equation):
-    def __init__(self, axis, log_input):
+    def __init__(self, axis, log_input, log_base=0):
         super().__init__(axis)
         self.points = []
 
@@ -127,13 +136,13 @@ class Logarithm(Equation):
             """
             if self.x_axis[0] > 0:
                 next_y_axis = True
-                if log_input[0] == "LOG":
-                    y_coordinate = math.log(self.x_axis[0], log_input[1])
-                elif log_input[0] == "LN":
+                if log_input == "LOG":
+                    y_coordinate = math.log(self.x_axis[0], log_base)
+                elif log_input == "LN":
                     y_coordinate = math.log(self.x_axis[0], 2.71828182845)  # accurate value for e
-                elif log_input[0] == "E":
+                elif log_input == "E":
                     y_coordinate = 2.71828182845 ** self.x_axis[0]
-            elif log_input[0] == "E":
+            elif log_input == "E":
                 y_coordinate = 2.71828182845 ** self.x_axis[0]
             else:
                 next_y_axis = False
@@ -145,4 +154,5 @@ class Logarithm(Equation):
 
     def return_points(self):
         return self.points
+
 
