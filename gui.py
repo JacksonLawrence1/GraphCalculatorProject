@@ -2,8 +2,9 @@
 # creates the screen with axis
 import equations
 import pygame
+import axis_input
+import equation_inputs
 from pygame.locals import *
-from importlib import reload
 
 modules_imported = ["equations"]
 
@@ -47,10 +48,10 @@ def button(text, x, y, width, height, inactive_colour, active_colour):
 
 
 # standardizing coordinates from array
-def standardize_coordinates(coordinates):
+def standardize_coordinates(coordinates, x_difference, y_difference, x_coordinate_factor, y_coordinate_factor):
     for item in coordinates:
-        item[0] = (item[0] + (x_axis_difference / 2)) * x_factor
-        item[1] = abs(item[1] - (y_axis_difference / 2)) * y_factor
+        item[0] = (item[0] + (x_difference / 2)) * x_coordinate_factor
+        item[1] = abs(item[1] - (y_difference / 2)) * y_coordinate_factor
     return coordinates
 
 
@@ -128,9 +129,7 @@ while repeat:  # Main event loop
 
             axis_counter_height = equation_axis.return_y_axis()[1]
             for i in range(0, height, int(height * 0.05)):
-                """
-                draws numbers along y axis
-                """
+                # draws numbers along y axis
                 axis_number = font.render("{:.0f}".format(axis_counter_height), True, BLACK)  # ensures no decimals
                 if axis_counter_height == 0:
                     screen.blit(axis_number, ((width/2) - 4, (height/2) - 10))
@@ -142,9 +141,7 @@ while repeat:  # Main event loop
 
             axis_counter_width = equation_axis.return_x_axis()[0]
             for i in range(0, width, int(width * 0.05)):
-                """
-                draws numbers along x axis
-                """
+                # draws numbers along x axis
                 axis_number = font.render("{:.0f}".format(axis_counter_width), True, BLACK)  # ensures no decimals
                 if axis_counter_width > 0:
                     screen.blit(axis_number, (i-5, height/2))
@@ -161,61 +158,54 @@ while repeat:  # Main event loop
             if 550 < mouse[0] < 670 and 50 < mouse[1] < 90:
                 # creates graph for 1st button
                 if event.type == MOUSEBUTTONDOWN:
+                    """
+                    saves the user's inputs as equation 1
+                    coordinates are then created based upon the current sized axis
+                    coordinates are then standardized so they can be rendered to the screen
+                    """
                     equation_coordinates_1_bool = True
-                    if "equation_inputs" not in modules_imported:
-                        modules_imported.append("equation_inputs")
-                        import equation_inputs
-                    else:
-                        reload(equation_inputs)
-                    equation_coordinates_1 = equation_inputs.equation_coordinates
-                    standardize_coordinates(equation_coordinates_1)
+                    equation_1 = equation_inputs.graph_update(True, equation_axis)
+                    equation_coordinates_1 = equation_inputs.graph_coordinates(equation_1, equation_axis)
+                    equation_coordinates_1 = standardize_coordinates(equation_coordinates_1, x_axis_difference, y_axis_difference, x_factor, y_factor)
 
             if 550 < mouse[0] < 670 and 100 < mouse[1] < 140:
                 # creates graph for 2nd button
                 if event.type == MOUSEBUTTONDOWN:
                     equation_coordinates_2_bool = True
-                    if "equation_inputs" not in modules_imported:
-                        modules_imported.append("equation_inputs")
-                        import equation_inputs
-                    else:
-                        reload(equation_inputs)
-                    equation_coordinates_2 = equation_inputs.equation_coordinates
-                    standardize_coordinates(equation_coordinates_2)
+                    equation_2 = equation_inputs.graph_update(True, equation_axis)
+                    equation_coordinates_2 = equation_inputs.graph_coordinates(equation_2, equation_axis)
+                    equation_coordinates_2 = standardize_coordinates(equation_coordinates_2, x_axis_difference, y_axis_difference, x_factor, y_factor)
 
             if 550 < mouse[0] < 670 and 150 < mouse[1] < 190:
                 # creates graph for 3rd button
                 if event.type == MOUSEBUTTONDOWN:
                     equation_coordinates_3_bool = True
-                    if "equation_inputs" not in modules_imported:
-                        modules_imported.append("equation_inputs")
-                        import equation_inputs
-                    else:
-                        reload(equation_inputs)
-                    equation_coordinates_3 = equation_inputs.equation_coordinates
-                    standardize_coordinates(equation_coordinates_3)
+                    equation_3 = equation_inputs.graph_update(True, equation_axis)
+                    equation_coordinates_3 = equation_inputs.graph_coordinates(equation_3, equation_axis)
+                    equation_coordinates_3 = standardize_coordinates(equation_coordinates_3, x_axis_difference, y_axis_difference, x_factor, y_factor)
 
             if equation_coordinates_1_bool:
                 # creates reset button once graph is drawn
                 reset_graph_button_2 = button("x", 680, 60, 20, 20, RED, (244, 92, 66))
-            if 680 < mouse[0] < 700 and 60 < mouse[1] < 80:
-                # if user clicks reset button graph is deleted
-                    if event.type == MOUSEBUTTONDOWN:
-                        equation_coordinates_1 = [(0,0), (0,0)]
-                        equation_coordinates_1_bool = False
+                if 680 < mouse[0] < 700 and 60 < mouse[1] < 80:
+                    # if user clicks reset button graph is deleted
+                        if event.type == MOUSEBUTTONDOWN:
+                            equation_coordinates_1 = [(0,0), (0,0)]
+                            equation_coordinates_1_bool = False
 
             if equation_coordinates_2_bool:
                 reset_graph_button_2 = button("x", 680, 110, 20, 20, (50, 78, 219), (94, 116, 229))
-            if 680 < mouse[0] < 700 and 110 < mouse[1] < 130:
-                    if event.type == MOUSEBUTTONDOWN:
-                        equation_coordinates_2 = [(0,0), (0,0)]
-                        equation_coordinates_2_bool = False
+                if 680 < mouse[0] < 700 and 110 < mouse[1] < 130:
+                        if event.type == MOUSEBUTTONDOWN:
+                            equation_coordinates_2 = [(0,0), (0,0)]
+                            equation_coordinates_2_bool = False
 
             if equation_coordinates_3_bool:
                 reset_graph_button_2 = button("x", 680, 160, 20, 20, (26, 165, 79), (51, 214, 113))
-            if 680 < mouse[0] < 700 and 160 < mouse[1] < 180:
-                    if event.type == MOUSEBUTTONDOWN:
-                        equation_coordinates_3 = [(0,0), (0,0)]
-                        equation_coordinates_3_bool = False
+                if 680 < mouse[0] < 700 and 160 < mouse[1] < 180:
+                        if event.type == MOUSEBUTTONDOWN:
+                            equation_coordinates_3 = [(0,0), (0,0)]
+                            equation_coordinates_3_bool = False
 
             if 50 < mouse[0] < 130 and 50 < mouse[1] < 90:
                     if event.type == MOUSEBUTTONDOWN:
@@ -225,21 +215,27 @@ while repeat:  # Main event loop
             axis_range_button = button("Change Axis", 550, 650, 120, 40, RED, (244, 92, 66))
 
             if 550 < mouse[0] < 670 and 650 < mouse[1] < 690:
-                # creates graph for 3rd button
+                # changes axis
                 if event.type == MOUSEBUTTONDOWN:
-                    if "equation_inputs" not in modules_imported:
-                        modules_imported.append("equation_inputs")
-                        import equation_inputs
-                    else:
-                        reload(equation_inputs)
-                    equation_inputs.axis_bool = False
+                    equation_axis = axis_input.axis_update()
 
-                    if "axis_input" not in modules_imported:
-                        modules_imported.append("axis_input")
-                        import axis_input
-                    else:
-                        reload(axis_input)
-                    equation_axis = axis_input.axis
+                    x_axis_difference = equation_axis.return_x_axis()[1] - equation_axis.return_x_axis()[0]
+                    y_axis_difference = equation_axis.return_y_axis()[1] - equation_axis.return_y_axis()[0]
+                    x_factor = width / x_axis_difference
+                    y_factor = height / y_axis_difference
+
+                    if equation_coordinates_1_bool:
+                        equation_coordinates_1 = equation_inputs.graph_coordinates(equation_1, equation_axis)
+                        equation_coordinates_1 = standardize_coordinates(equation_coordinates_1, x_axis_difference,
+                                                                         y_axis_difference, x_factor, y_factor)
+                    if equation_coordinates_2_bool:
+                        equation_coordinates_2 = equation_inputs.graph_coordinates(equation_2, equation_axis)
+                        equation_coordinates_2 = standardize_coordinates(equation_coordinates_2, x_axis_difference,
+                                                                         y_axis_difference, x_factor, y_factor)
+                    if equation_coordinates_3_bool:
+                        equation_coordinates_3 = equation_inputs.graph_coordinates(equation_3, equation_axis)
+                        equation_coordinates_3 = standardize_coordinates(equation_coordinates_3, x_axis_difference,
+                                                                         y_axis_difference, x_factor, y_factor)
 
             pygame.draw.lines(screen, RED, False, equation_coordinates_1, 2)  # draws equation of line
             pygame.draw.lines(screen, (50, 78, 219), False, equation_coordinates_2, 2)  # draws equation of line
